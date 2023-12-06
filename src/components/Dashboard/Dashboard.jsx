@@ -5,6 +5,8 @@ import logo from '../../logo.png';
 import Ranking from '../Ranking/Ranking';
 import VotesPerEntertainerBarChart from '../VotesPerEntertainerBarChart/VotesPerEntertainerBarChart';
 import VotesOverTimeLineChart from '../VotesOverTimeLineChart/VotesOverTimeLineChart';
+import VotesDistributionPieChart from '../VotesDistributionPieChart/VotesDistributionPieChart';
+import VotesTimeScatterPlot from '../VotesTimeScatterPlot/VotesTimeScatterPlot';
 
 import './Dashboard.css';
 
@@ -14,7 +16,9 @@ const Dashboard = () => {
     const slides = [
         { id: "ranking", title: "Entertainer's Ranking", content: <Ranking /> },
         { id: "votes-bar-chart", title: "Votes Per Entertainer Bar Chart", content: <VotesPerEntertainerBarChart /> },
-        { id: "votes-time-chart", title: "Votes Over Time Line Chart", content: <VotesOverTimeLineChart /> }
+        { id: "votes-time-chart", title: "Votes Over Time Line Chart", content: <VotesOverTimeLineChart /> },
+        { id: "votes-distribution-chart", title: "Votes Distribution Pie Chart", content: <VotesDistributionPieChart /> },
+        { id: "votes-time-scatter-plot", title: "Votes Time Scatter Plot", content: <VotesTimeScatterPlot /> },
     ];
 
     const goToSlide = (index) => {
