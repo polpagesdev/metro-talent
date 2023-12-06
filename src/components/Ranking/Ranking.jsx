@@ -34,7 +34,6 @@ const Rankings = () => {
 
     return (
         <div className="rankings-container">
-            <h1 className="rankings-title">Entertainer's Ranking</h1>
             <ul className="rankings-list">
                 {entertainers.map((entertainer, index) => (
                     <li key={entertainer.entertainerID}>

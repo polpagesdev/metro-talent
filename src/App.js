@@ -2,16 +2,12 @@ import React from 'react';
 
 import './App.css';
 
-import Ranking from './components/Ranking/Ranking';
-import VotesPerEntertainerBarChart from './components/VotesPerEntertainerBarChart/VotesPerEntertainerBarChart';
-import VotesOverTimeLineChart from './components/VotesOverTimeLineChart/VotesOverTimeLineChart';
+import Dashboard from './components/Dashboard/Dashboard';
 
 function App() {
   return (
     <div className="App">
-      <Ranking />
-      <VotesPerEntertainerBarChart />
-      <VotesOverTimeLineChart />
+      <Dashboard />
     </div>
   );
 }
