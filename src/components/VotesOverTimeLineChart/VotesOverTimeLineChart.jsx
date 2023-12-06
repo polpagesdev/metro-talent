@@ -38,7 +38,7 @@ const VotesOverTimeLineChart = () => {
         };
 
         fetchVotes();
-    }, [db]);
+    });
 
     useEffect(() => {
         if (votesData.length > 0) {

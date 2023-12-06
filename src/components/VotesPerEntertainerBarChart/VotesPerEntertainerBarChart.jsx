@@ -1,47 +1,18 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 
 import './VotesPerEntertainerBarChart.css';
 
 import * as d3 from 'd3';
 
 import { db } from '../../firebase-config';
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import { collection, getDocs } from 'firebase/firestore';
 
 const VotesPerEntertainerBarChart = () => {
     const d3Chart = useRef();
     const [votesData, setVotesData] = useState([]);
 
-    useEffect(() => {
-        // Fetch votes from Firebase and process them
-        const fetchVotes = async () => {
-            const votesSnapshot = await getDocs(collection(db, 'votes'));
-            const votes = votesSnapshot.docs.map(doc => doc.data());
-
-            // Reduce the votes into a count per entertainer
-            const countPerEntertainer = votes.reduce((acc, { entertainerID }) => {
-                acc[entertainerID] = (acc[entertainerID] || 0) + 1;
-                return acc;
-            }, {});
-
-            // Convert the object into an array of objects
-            const dataArray = Object.keys(countPerEntertainer).map(key => ({
-                entertainerID: key,
-                votes: countPerEntertainer[key]
-            }));
-
-            setVotesData(dataArray);
-        };
-
-        fetchVotes();
-    }, []);
-
-    useEffect(() => {
-        if (votesData.length > 0) {
-            drawChart();
-        }
-    }, [votesData]);
-
-    const drawChart = () => {
+    // Define drawChart with useCallback
+    const drawChart = useCallback(() => {
         const margin = { top: 20, right: 30, bottom: 40, left: 90 };
         const width = 460 - margin.left - margin.right;
         const height = 400 - margin.top - margin.bottom;
@@ -86,7 +57,37 @@ const VotesPerEntertainerBarChart = () => {
             .attr('width', x.bandwidth())
             .attr('height', d => height - y(d.votes))
             .attr('fill', '#69b3a2');
-    };
+    }, [votesData]); // Add any dependencies of drawChart here
+
+    useEffect(() => {
+        // Fetch votes from Firebase and process them
+        const fetchVotes = async () => {
+            const votesSnapshot = await getDocs(collection(db, 'votes'));
+            const votes = votesSnapshot.docs.map(doc => doc.data());
+
+            // Reduce the votes into a count per entertainer
+            const countPerEntertainer = votes.reduce((acc, { entertainerID }) => {
+                acc[entertainerID] = (acc[entertainerID] || 0) + 1;
+                return acc;
+            }, {});
+
+            // Convert the object into an array of objects
+            const dataArray = Object.keys(countPerEntertainer).map(key => ({
+                entertainerID: key,
+                votes: countPerEntertainer[key]
+            }));
+
+            setVotesData(dataArray);
+        };
+
+        fetchVotes();
+    }, []);
+
+    useEffect(() => {
+        if (votesData.length > 0) {
+            drawChart();
+        }
+    }, [votesData, drawChart]);
 
     return <div ref={d3Chart} />;
 };
