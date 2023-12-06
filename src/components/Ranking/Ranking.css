@@ -1,0 +1,24 @@
+.rankings-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+}
+
+.rankings-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.rankings-list li {
+    background-color: #f2f2f2;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.rankings-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+}

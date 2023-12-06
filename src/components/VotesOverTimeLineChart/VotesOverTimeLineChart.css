@@ -1,0 +1,30 @@
+.d3-chart {
+    display: block;
+    margin: auto;
+}
+
+/* Style for the line in the chart */
+path {
+    stroke: #ffab00;
+    stroke-width: 2;
+    fill: none;
+}
+
+/* Style for the axes */
+.axis path,
+.axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+
+.axis text {
+    font-family: 'Arial', sans-serif;
+    font-size: 12px;
+}
+
+/* Style for the axis labels */
+.axis-label {
+    font-size: 14px;
+    font-weight: bold;
+}
