@@ -1,0 +1,40 @@
+.line {
+    fill: none;
+    stroke: steelblue;
+    stroke-width: 2;
+}
+
+.dot {
+    fill: red;
+}
+
+/* General styles for the labels and inputs */
+label {
+    margin-right: 5px;
+    font-size: 16px;
+    color: #333;
+}
+
+input:first-of-type {
+    margin-right: 25px;
+}
+
+input[type="date"] {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+    color: #333;
+}
+
+/* Hover effect for inputs */
+input[type="date"]:hover {
+    border-color: #88a;
+}
+
+/* Focus effect for inputs */
+input[type="date"]:focus {
+    border-color: #55a;
+    outline: none;
+}

@@ -1,0 +1,9 @@
+/* Style for the treemap rectangles */
+rect {
+    stroke: #fff;
+}
+
+/* Style for the text inside the rectangles */
+text {
+    pointer-events: none;
+}

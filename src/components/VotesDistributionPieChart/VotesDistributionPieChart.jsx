@@ -1,91 +1,125 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
-import { db } from '../../firebase-config';
-import { collection, query, where, getDocs } from 'firebase/firestore';
-
 import './VotesDistributionPieChart.css';
 
-const VotesDistributionPieChart = () => {
+const VotesDistributionPieChart = ({ votesData }) => {
     const d3Chart = useRef();
-    const [votes, setVotes] = useState([]);
-    const [dateRange, setDateRange] = useState({ start: '', end: '' });
+    const [stationVotes, setStationVotes] = useState([]);
 
     useEffect(() => {
-        const fetchData = async () => {
-            let votesQuery = collection(db, 'votes');
-            if (dateRange.start && dateRange.end) {
-                votesQuery = query(votesQuery, where("timestamp", ">=", dateRange.start), where("timestamp", "<=", dateRange.end));
+        // Group votes by station and then by entertainers
+        const votesByStation = votesData.reduce((acc, vote) => {
+            if (!acc[vote.stationID]) {
+                acc[vote.stationID] = {};
             }
-            const votesSnapshot = await getDocs(votesQuery);
-            const votesData = votesSnapshot.docs.map(doc => doc.data());
-            setVotes(votesData);
-        };
+            if (!acc[vote.stationID][vote.entertainerID]) {
+                acc[vote.stationID][vote.entertainerID] = 0;
+            }
+            acc[vote.stationID][vote.entertainerID]++;
+            return acc;
+        }, {});
 
-        fetchData();
-    }, [dateRange]);
+        // Convert the nested object into an array suitable for D3
+        const processedData = Object.entries(votesByStation).map(([station, entertainers]) => ({
+            stationID: station,
+            votesCount: Object.values(entertainers).reduce((sum, current) => sum + current, 0),
+            details: entertainers // Keep the entertainers and their votes for the tooltip
+        }));
+
+        setStationVotes(processedData);
+    }, [votesData]);
 
     useEffect(() => {
-        if (votes.length > 0) {
-            drawChart(votes);
+        if (stationVotes.length > 0) {
+            drawChart();
         }
-    }, [votes]);
+    }, [stationVotes]);
 
-    const drawChart = (votesData) => {
-        // Set the dimensions and margins of the graph
-        const width = 450;
-        const height = 450;
-        const margin = 40;
+    function getContrastYIQ(rgb) {
+        const yiq = ((rgb.r * 299) + (rgb.g * 587) + (rgb.b * 114)) / 1000;
+        return yiq >= 128 ? 'black' : 'white';
+    }
 
-        // The radius of the pie chart is half the smallest side
-        const radius = Math.min(width, height) / 2 - margin;
+    const drawChart = () => {
+        const width = 500;
+        const height = 500;
+        const radius = Math.min(width, height) / 2;
 
-        // Append the svg object to the div called 'd3Chart'
+        // Clear previous SVG
+        d3.select(d3Chart.current).selectAll("*").remove();
+
         const svg = d3.select(d3Chart.current)
             .append('svg')
             .attr('width', width)
-            .attr('height', height)
+            .attr('height', height + 100)
             .append('g')
-            .attr('transform', `translate(${width / 2}, ${height / 2})`);
+            .attr('transform', `translate(${width / 2}, ${(height / 2) + 50})`);
 
-        // Set the color scale
+        // Set up a color scale with random colors
         const color = d3.scaleOrdinal()
-            .domain(votesData.map(d => d.vote))
-            .range(d3.schemeCategory10);
+            .domain(stationVotes.map(d => d.stationID))
+            .range(stationVotes.map(() => d3.rgb(d3.randomUniform(0, 255)(), d3.randomUniform(0, 255)(), d3.randomUniform(0, 255)())));
 
-        // Compute the position of each group on the pie
+        // Generate the pie
         const pie = d3.pie()
-            .sort(null) // Do not sort group by size
-            .value(d => d.count);
+            .value(d => d.votesCount);
 
-        const data_ready = pie(votesData);
+        // Generate the arcs
+        const arc = d3.arc()
+            .innerRadius(0)
+            .outerRadius(radius);
 
-        // Build the pie chart
-        svg
-            .selectAll('pie-slices')
-            .data(data_ready)
-            .join('path')
-            .attr('d', d3.arc()
-                .innerRadius(0)
-                .outerRadius(radius)
-            )
-            .attr('fill', d => color(d.data.vote))
+        // Define the div for the tooltip
+        const tooltip = d3.select("body").append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0);
+
+        // Function to determine text color based on the background color
+        const getContrastYIQ = (rgb) => {
+            const yiq = ((rgb.r * 299) + (rgb.g * 587) + (rgb.b * 114)) / 1000;
+            return yiq >= 128 ? 'black' : 'white';
+        };
+
+        // Draw the pie
+        svg.selectAll('slice')
+            .data(pie(stationVotes))
+            .enter()
+            .append('path')
+            .attr('d', arc)
+            .attr('fill', d => color(d.data.stationID))
             .attr('stroke', 'white')
             .style('stroke-width', '2px')
-            .style('opacity', 0.7);
-    };
+            .on("mouseover", (event, d) => {
+                // Tooltip logic...
+            })
+            .on('mouseout', () => {
+                // Tooltip logic...
+            });
 
-    const handleDateFilterChange = (e) => {
-        setDateRange({ ...dateRange, [e.target.name]: e.target.value });
+        // Add titles to pie sections
+        svg.selectAll('text')
+            .data(pie(stationVotes))
+            .enter()
+            .append('text')
+            .attr('transform', d => `translate(${arc.centroid(d)})`)
+            .attr('text-anchor', 'middle')
+            .style('fill', d => getContrastYIQ(d3.rgb(color(d.data.stationID))))
+            .style('font-size', '12px')
+            .style('pointer-events', 'none')
+            .selectAll('tspan')
+            .data(d => [
+                { text: d.data.stationID, x: 0, dy: '-0.7em' },
+                { text: `Votes: ${d.data.votesCount}`, x: 0, dy: '1em' }
+            ])
+            .enter()
+            .append('tspan')
+            .attr('x', d => d.x)
+            .attr('dy', d => d.dy)
+            .text(d => d.text);
     };
 
     return (
-        <>
-            <div className="filters">
-                <input type="date" name="start" value={dateRange.start} onChange={handleDateFilterChange} />
-                <input type="date" name="end" value={dateRange.end} onChange={handleDateFilterChange} />
-            </div>
-            <div ref={d3Chart}></div>
-        </>
+        <div ref={d3Chart} />
     );
 };
 

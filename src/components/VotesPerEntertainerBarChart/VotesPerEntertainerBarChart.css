@@ -1,6 +1,12 @@
 .d3-chart {
+    min-height: fit-content;
     display: block;
     margin: auto;
+}
+
+/* Ensure the SVG container is large enough to fit rotated labels */
+.d3-chart svg {
+    overflow: visible; /* Make sure the entire rotated label is visible */
 }
 
 /* Style for the bars in the chart */
@@ -25,6 +31,8 @@ rect:hover {
 .axis text {
     font-family: 'Arial', sans-serif;
     font-size: 12px;
+    transform: translate(-10px, 0) rotate(-45deg); /* Adjust translation as needed */
+    text-anchor: end;
 }
 
 text {
@@ -35,4 +43,19 @@ text {
 .axis-label {
     font-size: 14px;
     font-weight: bold;
+}
+
+.tooltip {
+    position: absolute;
+    text-align: center;
+    padding: 8px;
+    font: 12px sans-serif;
+    background: white;
+    border: 0px;
+    border-radius: 8px;
+    pointer-events: none;
+    opacity: 0;
+    box-shadow: 0px 0px 2px 0px #69b3a2;
+    transition: opacity 0.3s;
+    z-index: 10;
 }

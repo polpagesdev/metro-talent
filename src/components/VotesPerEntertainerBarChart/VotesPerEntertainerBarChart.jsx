@@ -1,21 +1,35 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-
 import './VotesPerEntertainerBarChart.css';
-
 import * as d3 from 'd3';
 
-import { db } from '../../firebase-config';
-import { collection, getDocs } from 'firebase/firestore';
-
-const VotesPerEntertainerBarChart = () => {
+const VotesPerEntertainerBarChart = ({ votesData }) => {
     const d3Chart = useRef();
-    const [votesData, setVotesData] = useState([]);
+    const [processedData, setProcessedData] = useState([]);
 
-    // Define drawChart with useCallback
+    const processVotesData = useCallback(() => {
+        // Reduce the votes into a count per entertainer
+        const countPerEntertainer = votesData.reduce((acc, vote) => {
+            acc[vote.entertainerID] = (acc[vote.entertainerID] || 0) + 1;
+            return acc;
+        }, {});
+
+        // Convert the object into an array of objects
+        const dataArray = Object.keys(countPerEntertainer).map(key => ({
+            entertainerID: key,
+            votes: countPerEntertainer[key]
+        }));
+
+        setProcessedData(dataArray);
+    }, [votesData]);
+
+    useEffect(() => {
+        processVotesData();
+    }, [processVotesData]);
+
     const drawChart = useCallback(() => {
-        const margin = { top: 20, right: 30, bottom: 40, left: 90 };
-        const width = 460 - margin.left - margin.right;
-        const height = 400 - margin.top - margin.bottom;
+        const margin = { top: 20, right: 30, bottom: 120, left: 90 };
+        const width = 560 - margin.left - margin.right;
+        const height = 600 - margin.top - margin.bottom;
 
         // Clear any previous svg
         d3.select(d3Chart.current).selectAll("*").remove();
@@ -30,7 +44,7 @@ const VotesPerEntertainerBarChart = () => {
         // X axis
         const x = d3.scaleBand()
             .range([0, width])
-            .domain(votesData.map(d => d.entertainerID))
+            .domain(processedData.map(d => d.entertainerID))
             .padding(0.2);
 
         svg.append('g')
@@ -42,52 +56,53 @@ const VotesPerEntertainerBarChart = () => {
 
         // Add Y axis
         const y = d3.scaleLinear()
-            .domain([0, d3.max(votesData, d => d.votes)])
+            .domain([0, d3.max(processedData, d => d.votes)])
             .range([height, 0]);
 
         svg.append('g')
             .call(d3.axisLeft(y));
 
+        // Tooltip for the bars
+        const tooltip = d3.select('body').append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0);
+
         // Bars
         svg.selectAll('myBar')
-            .data(votesData)
+            .data(processedData)
             .join('rect')
             .attr('x', d => x(d.entertainerID))
             .attr('y', d => y(d.votes))
             .attr('width', x.bandwidth())
             .attr('height', d => height - y(d.votes))
-            .attr('fill', '#69b3a2');
-    }, [votesData]); // Add any dependencies of drawChart here
+            .attr('fill', '#69b3a2')
+            .on('mouseover', (event, d) => {
+                tooltip.transition()
+                    .duration(100)
+                    .style('opacity', 0.9); // Make it more visible
+                tooltip.html(d.entertainerID + "<br/>Votes: " + d.votes)
+                    .style('left', (event.pageX + 10) + 'px') // Position tooltip correctly
+                    .style('top', (event.pageY - 28) + 'px');
+            })
+            .on('mouseout', () => {
+                tooltip.transition()
+                    .duration(50)
+                    .style('opacity', 0);
+            });
+
+        // Rotate the text on the x-axis so it's readable
+        svg.selectAll("text")
+            .style("text-anchor", "end")
+            .attr("dx", "-.8em")
+            .attr("dy", ".15em")
+            .attr("transform", "rotate(-65)");
+    }, [processedData]);
 
     useEffect(() => {
-        // Fetch votes from Firebase and process them
-        const fetchVotes = async () => {
-            const votesSnapshot = await getDocs(collection(db, 'votes'));
-            const votes = votesSnapshot.docs.map(doc => doc.data());
-
-            // Reduce the votes into a count per entertainer
-            const countPerEntertainer = votes.reduce((acc, { entertainerID }) => {
-                acc[entertainerID] = (acc[entertainerID] || 0) + 1;
-                return acc;
-            }, {});
-
-            // Convert the object into an array of objects
-            const dataArray = Object.keys(countPerEntertainer).map(key => ({
-                entertainerID: key,
-                votes: countPerEntertainer[key]
-            }));
-
-            setVotesData(dataArray);
-        };
-
-        fetchVotes();
-    }, []);
-
-    useEffect(() => {
-        if (votesData.length > 0) {
+        if (processedData.length > 0) {
             drawChart();
         }
-    }, [votesData, drawChart]);
+    }, [processedData, drawChart]);
 
     return <div ref={d3Chart} />;
 };

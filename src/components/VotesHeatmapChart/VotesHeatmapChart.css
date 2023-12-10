@@ -1,0 +1,47 @@
+.bordered {
+    stroke: #E6E6E6;
+    stroke-width: 2px;
+}
+
+.hour {
+    fill: #ffffff;
+}
+
+.axis-workweek {
+    font-weight: bold;
+}
+
+.axis-worktime {
+    font-weight: bold;
+}
+
+/* General styles for the labels and selects */
+label {
+    margin-right: 5px;
+    font-size: 16px;
+    color: #333;
+}
+
+select:first-of-type {
+    margin-right: 25px;
+}
+
+select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+    color: #333;
+}
+
+/* Hover effect for selects */
+select:hover {
+    border-color: #88a;
+}
+
+/* Focus effect for selects */
+select:focus {
+    border-color: #55a;
+    outline: none;
+}
