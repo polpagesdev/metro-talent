@@ -32,8 +32,8 @@ const TopEntertainersTreemap = ({ votesData }) => {
         }
 
         const margin = { top: 10, right: 10, bottom: 10, left: 10 };
-        const width = 960 - margin.left - margin.right;
-        const height = 500 - margin.top - margin.bottom;
+        const width = 850 - margin.left - margin.right;
+        const height = 400 - margin.top - margin.bottom;
         const color = d3.scaleOrdinal(d3.schemeCategory10); // Define a color scale
 
         // Clear any existing SVG
@@ -75,11 +75,11 @@ const TopEntertainersTreemap = ({ votesData }) => {
             .selectAll('tspan')
             .data(d => [d.data.name, `Votes: ${d.data.value}`, `Station: ${d.data.stationID}`])
             .enter().append('tspan')
-            .attr('x', 60) // Small padding from the left edge
+            .attr('x', 50) // Small padding from the left edge
             .attr('y', (d, i) => 20 + i * 15) // Offset each line of text
             .text(d => d)
             .attr('fill', 'white')
-            .attr('font-size', '0.75rem')
+            .attr('font-size', '0.8em')
             .attr('font-weight', 'bold')
     };
 

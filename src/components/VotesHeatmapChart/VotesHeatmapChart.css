@@ -16,9 +16,15 @@
 }
 
 /* General styles for the labels and selects */
+.form-filter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 label {
     margin-right: 5px;
-    font-size: 16px;
+    font-size: 1em;
     color: #333;
 }
 

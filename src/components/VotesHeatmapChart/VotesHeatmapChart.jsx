@@ -43,7 +43,7 @@ const VotesHeatmapChart = ({ votesData }) => {
         }
 
         const margin = { top: 50, right: 0, bottom: 100, left: 30 };
-        const width = 950 - margin.left - margin.right;
+        const width = 900 - margin.left - margin.right;
         const height = 900 - margin.top - margin.bottom;
         const gridSize = Math.floor(width / 24);
         const legendElementWidth = gridSize * 2;
@@ -115,15 +115,17 @@ const VotesHeatmapChart = ({ votesData }) => {
 
     return (
         <div>
-            <label htmlFor="entertainer-select">Choose an entertainer</label>
-            <select id="entertainer-select" onChange={e => setSelectedEntertainer(e.target.value)}>
-                <option value="">All Entertainers</option>
-                {entertainersList.map(entertainer => (
-                    <option key={entertainer} value={entertainer}>
-                        {entertainer}
-                    </option>
-                ))}
-            </select>
+            <div className='form-filter'>
+                <label htmlFor="entertainer-select">Choose an entertainer</label>
+                <select id="entertainer-select" onChange={e => setSelectedEntertainer(e.target.value)}>
+                    <option value="">All Entertainers</option>
+                    {entertainersList.map(entertainer => (
+                        <option key={entertainer} value={entertainer}>
+                            {entertainer}
+                        </option>
+                    ))}
+                </select>
+            </div>
             <div ref={chartRef} />
         </div>
     );

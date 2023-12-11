@@ -91,9 +91,7 @@ const Dashboard = () => {
                 </div></a>
                 <div className="nav-items">
                     <a href="/">Home</a>
-                    <a href="#mission">Our mission</a>
-                    <a href="#about">About us</a>
-                    <a href="#contact">Contact</a>
+                    <a href="/predictions">Predictions</a>
                 </div>
             </nav>
 

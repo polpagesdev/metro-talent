@@ -2,6 +2,7 @@
 
 .dashboard {
     font-family: 'Poppins', sans-serif;
+    height: 100%;
 }
 
 .dashboard-navbar {
@@ -42,36 +43,51 @@
 }
 
 .dashboard-header {
-    height: 9vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 8vh;
     text-align: center;
-    padding: 20px;
-    background: rgb(6,36,54);
+    padding: 20px 20px;
     background: linear-gradient(90deg, rgba(6,36,54,1) 0%, rgba(28,105,149,1) 65%, rgba(46,154,217,1) 100%);
     color: #E9EDF3;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     box-shadow: 0 4px 8px 2px rgba(0, 0, 0, 0.1);
 }
 
 .dashboard-header h1 {
     margin: 0;
-    font-size: 2.5em;
+    font-size: 1.8em;
 }
 
 .dashboard-header p {
+    text-align: center;
     font-size: 1em;
-    color: #E9EDF3;
+    color: #E9EDF3; 
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .dashboard-header h1 {
+        font-size: 1.5em; 
+    }
+    .dashboard-header p {
+        font-size: 0.9em; 
+    }
 }
 
 .section-title {
-    font-size: 2em;
+    font-size: 1.5em;
     color: #333;
-    margin-bottom: 10px;
+    margin-bottom: 0;
+    margin-top: 0;
 }
 
 .section-description {
-    font-size: 1em;
+    font-size: 0.8em;
+    text-align: center;
     color: #666;
-    margin-bottom: 20px;
     width: 40vw;
 }
 
@@ -79,7 +95,7 @@
     position: relative;
     overflow: hidden;
     width: 100%;
-    height: 78vh;
+    height: 75%;
 }
 
 .slides {

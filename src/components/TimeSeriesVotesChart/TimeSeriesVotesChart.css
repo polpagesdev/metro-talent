@@ -38,3 +38,9 @@ input[type="date"]:focus {
     border-color: #55a;
     outline: none;
 }
+
+.date-range-picker {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

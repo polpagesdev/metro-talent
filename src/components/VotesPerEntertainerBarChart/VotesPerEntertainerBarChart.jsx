@@ -28,8 +28,8 @@ const VotesPerEntertainerBarChart = ({ votesData }) => {
 
     const drawChart = useCallback(() => {
         const margin = { top: 20, right: 30, bottom: 120, left: 90 };
-        const width = 560 - margin.left - margin.right;
-        const height = 600 - margin.top - margin.bottom;
+        const width = 600 - margin.left - margin.right;
+        const height = 450 - margin.top - margin.bottom;
 
         // Clear any previous svg
         d3.select(d3Chart.current).selectAll("*").remove();

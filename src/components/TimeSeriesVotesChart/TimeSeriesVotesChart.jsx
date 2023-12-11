@@ -38,8 +38,8 @@ const TimeSeriesVotesChart = ({ votesData }) => {
         }
 
         const margin = { top: 20, right: 20, bottom: 70, left: 50 };
-        const width = 960 - margin.left - margin.right;
-        const height = 500 - margin.top - margin.bottom;
+        const width = 850 - margin.left - margin.right;
+        const height = 400 - margin.top - margin.bottom;
 
         // Clear any existing SVG
         d3.select(chartRef.current).selectAll("*").remove();
@@ -98,20 +98,22 @@ const TimeSeriesVotesChart = ({ votesData }) => {
 
     return (
         <div>
-            <label htmlFor="start-date">Start Date</label>
-            <input
-                type="date"
-                id="start-date"
-                value={startDate.toISOString().split('T')[0]}
-                onChange={e => setStartDate(new Date(e.target.value))}
-            />
-            <label htmlFor="end-date">End Date</label>
-            <input
-                type="date"
-                id="end-date"
-                value={endDate.toISOString().split('T')[0]}
-                onChange={e => setEndDate(new Date(e.target.value))}
-            />
+            <div className='date-range-picker'>
+                <label htmlFor="start-date">Start Date</label>
+                <input
+                    type="date"
+                    id="start-date"
+                    value={startDate.toISOString().split('T')[0]}
+                    onChange={e => setStartDate(new Date(e.target.value))}
+                />
+                <label htmlFor="end-date">End Date</label>
+                <input
+                    type="date"
+                    id="end-date"
+                    value={endDate.toISOString().split('T')[0]}
+                    onChange={e => setEndDate(new Date(e.target.value))}
+                />
+            </div>
             <div ref={chartRef} />
         </div>
     );

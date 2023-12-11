@@ -41,8 +41,8 @@ const VotesDistributionPieChart = ({ votesData }) => {
     }
 
     const drawChart = () => {
-        const width = 500;
-        const height = 500;
+        const width = 400;
+        const height = 400;
         const radius = Math.min(width, height) / 2;
 
         // Clear previous SVG
@@ -53,7 +53,7 @@ const VotesDistributionPieChart = ({ votesData }) => {
             .attr('width', width)
             .attr('height', height + 100)
             .append('g')
-            .attr('transform', `translate(${width / 2}, ${(height / 2) + 50})`);
+            .attr('transform', `translate(${width / 2}, ${(height / 2) + 20})`);
 
         // Set up a color scale with random colors
         const color = d3.scaleOrdinal()

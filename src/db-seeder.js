@@ -22,22 +22,27 @@ const randomVote = () => {
 
 // Mapping names to station IDs
 const nameToStationMap = {
+  // L1
   'Emily Miller': 'L1',
   'David Davis': 'L1',
   'Sarah Rodriguez': 'L1',
   'Kevin Martinez': 'L1',
+  // L2
   'Rachel Hernandez': 'L2',
   'James Lopez': 'L2',
   'Laura Gonzalez': 'L2',
   'Chris Wilson': 'L2',
+  // L3
   'Megan Anderson': 'L3',
   'Mark Thomas': 'L3',
   'Olivia Taylor': 'L3',
   'Jason Moore': 'L3',
+  // L4
   'Chloe Jackson': 'L4',
   'Aaron Martin': 'L4',
   'Sophia Lee': 'L4',
   'Ethan Perez': 'L4',
+  // L5
   'Grace Thompson': 'L5',
   'Kyle White': 'L5',
   'Emma Harris': 'L5',
